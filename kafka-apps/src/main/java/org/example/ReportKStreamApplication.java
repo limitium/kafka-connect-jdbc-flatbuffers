@@ -68,19 +68,26 @@ public class ReportKStreamApplication {
         @Override
         public void configureTopology(Topology topology) {
 
+            //Serde for incoming event deserialization
             FlatbuffersSerde<FBReportEvent> eventSerde = new FlatbuffersSerde<>(FBReportEvent.class);
+            //Serde for FBReport storing in a kafka store
             FlatbuffersSerde<FBReport> reportSerde = new FlatbuffersSerde<>(FBReport.class);
 
+            //Naked kafka store initialization
             StoreBuilder<KeyValueStore<Long, FBReport>> reportStore = Stores.keyValueStoreBuilder(
                     Stores.persistentKeyValueStore(REPORT_STORE),
                     Serdes.Long(),
                     reportSerde);
 
+            //topology definition 'demo.reports' is consumed by a single processor without any output
             topology.addSource(REPORT_SOURCE, Serdes.Long().deserializer(), eventSerde.deserializer(), "demo.reports")
                     .addProcessor(REPORT_PROCESSOR, ReportProcessor::new, REPORT_SOURCE)
                     .addStateStore(reportStore, REPORT_PROCESSOR);
         }
 
+        /**
+         * CUD processor for FBReport table, example of ReportDAO usage
+         */
         public static class ReportProcessor implements Processor<Long, FBReportEvent, Long, FBReportEvent> {
             private static final Logger logger = LoggerFactory.getLogger(ReportProcessor.class);
             private ProcessorContext<Long, FBReportEvent> context;
@@ -90,6 +97,8 @@ public class ReportKStreamApplication {
             public void init(ProcessorContext<Long, FBReportEvent> context) {
                 Processor.super.init(context);
                 this.context = context;
+
+                //DAO creation around kafka store, store identified by id
                 reportDAO = new ReportDAO(context, REPORT_STORE);
             }
 

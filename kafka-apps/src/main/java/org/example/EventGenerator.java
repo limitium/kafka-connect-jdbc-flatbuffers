@@ -15,6 +15,9 @@ import org.slf4j.LoggerFactory;
 import java.nio.ByteBuffer;
 import java.util.Properties;
 
+/**
+ * The simplest implementation of a kafka message producer
+ */
 public class EventGenerator {
     private static final Logger logger = LoggerFactory.getLogger(EventGenerator.class);
 

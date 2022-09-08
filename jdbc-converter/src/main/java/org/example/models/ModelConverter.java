@@ -8,6 +8,11 @@ import org.apache.kafka.connect.data.SchemaBuilder;
 import org.apache.kafka.connect.data.Struct;
 import org.example.serde.FlatbuffersSerde;
 
+/**
+ * Collects schema definition from generated children classes and fills {@link Struct}
+ *
+ * @param <T> - flatbuffers table
+ */
 public abstract class ModelConverter<T extends Table> {
     final Deserializer<T> deserializer = new FlatbuffersSerde<T>(getClazz()).deserializer();
 
@@ -19,7 +24,6 @@ public abstract class ModelConverter<T extends Table> {
                         .name(getClazz().getCanonicalName()))
                 .build();
     }
-
 
     public SchemaAndValue convert(byte[] data) {
         Schema schema = getSchema();

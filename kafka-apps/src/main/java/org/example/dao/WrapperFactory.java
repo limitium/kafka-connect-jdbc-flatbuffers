@@ -6,6 +6,12 @@ import org.springframework.core.ResolvableType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * Factory for wrappers. 
+ *
+ * @param <FB> - flatbuffers table
+ * @param <WRAPPER> - wrapper class around FB
+ */
 public class WrapperFactory<FB extends Table, WRAPPER extends AbstractFlatbufferWrapper<FB>> {
     protected final Class<FB> fbClass;
     private final Class<WRAPPER> wrapperClass;
@@ -28,7 +34,12 @@ public class WrapperFactory<FB extends Table, WRAPPER extends AbstractFlatbuffer
         }
     }
 
-
+    /**
+     * Used by {@link FlatbuffersDAO#get(long)} to create wrapper around available flatbuffers object
+     * 
+     * @param object - flatbuffers object
+     * @return
+     */
     WRAPPER wrap(FB object) {
         try {
             return wrapConstructor.newInstance(object);
@@ -37,6 +48,12 @@ public class WrapperFactory<FB extends Table, WRAPPER extends AbstractFlatbuffer
         }
     }
 
+    /**
+     * Used by {@link FlatbuffersDAO#create(long)} to create wrapper around empty flatbuffers
+     *
+     * @param id - new key for store
+     * @return
+     */
     WRAPPER create(long id) {
         try {
             return createConstructor.newInstance(id);

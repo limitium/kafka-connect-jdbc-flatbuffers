@@ -155,6 +155,15 @@ http://localhost:8083/connectors?expand=status
 ```shell
 curl -X DELETE http://localhost:8083/connectors/sink-postgres
 ```
+### Important classes
+
+`:model`
+* [FlatbuffersSerde.java](https://github.com/limitium/kafka-connect-jdbc-flatbuffers/blob/master/model/src/main/java/org/example/serde/FlatbuffersSerde.java) - generic `Serde`, works with any flatbuffers
+  
+`:kafka-apps`
+
+`:jdbc-connect`
+* [FlatbufferSinkConverter.java](https://github.com/limitium/kafka-connect-jdbc-flatbuffers/blob/master/jdbc-converter/src/main/java/org/example/FlatbufferSinkConverter.java) - Custom Flatbuffers converter uses child class of [ModelConverter](https://github.com/limitium/kafka-connect-jdbc-flatbuffers/blob/master/jdbc-converter/src/main/java/org/example/models/ModelConverter.java) for actual conversion
 
 ### Generated or semi-generated class
 

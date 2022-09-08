@@ -9,6 +9,9 @@ import java.util.Map;
 
 import static org.apache.kafka.common.config.ConfigDef.NO_DEFAULT_VALUE;
 
+/**
+ * Holds config for {@link FlatbufferSinkConverter}, the main variable is `fb.converter.class`
+ */
 public class FlatbufferSinkConverterConfig extends ConverterConfig {
     public static final String FB_CONVERTER_CONFIG = "fb.converter.class";
     private static final String FB_CONVERTER_DOC = "The name of the Java character set to use for encoding strings as byte arrays.";

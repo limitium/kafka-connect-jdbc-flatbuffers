@@ -9,6 +9,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 
+/**
+ * Serde implementation for flatbuffers serialization and deserialization. Null values and tombstonre are supported.
+ * For correct serialization root table must be sized!
+ *
+ * <pre class="code">
+ *     builder.finish(root_table)
+ *     byte[] bytes = builder.sizedByteArray(); //size ByteBuffer to table
+ *     FBTable.getRootAsFBTable(ByteBuffer.wrap(bytes)) //wrap around sized BB instead of builder
+ * </pre>
+ *
+ * @param <T> flatbuffers table
+ */
 public class FlatbuffersSerde<T extends Table> implements Serde<T> {
 
     private final Method rootMaker;
@@ -25,8 +37,6 @@ public class FlatbuffersSerde<T extends Table> implements Serde<T> {
     @Override
     public Serializer<T> serializer() {
         return (topic, data) -> {
-            //@todo: check for nulls and tombstone
-
             //BB must be truncated via
             //builder.finish(root_table)
             //byte[] bytes = builder.sizedByteArray();

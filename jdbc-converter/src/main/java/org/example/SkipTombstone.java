@@ -22,6 +22,10 @@ import org.apache.kafka.connect.transforms.Transformation;
 
 import java.util.Map;
 
+/**
+ * Skips tombstone records from sink procedure
+ * @param <R>
+ */
 public class SkipTombstone<R extends ConnectRecord<R>> implements Transformation<R> {
     public static final ConfigDef CONFIG_DEF = new ConfigDef();
 

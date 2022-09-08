@@ -5,6 +5,7 @@ import org.apache.kafka.common.config.ConfigException;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaAndValue;
+import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.storage.Converter;
 import org.apache.kafka.connect.storage.ConverterType;
 import org.apache.kafka.connect.storage.StringConverterConfig;
@@ -14,6 +15,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Converts flatbuffers byte[] into {@link Struct}. Only sink implementation is available.
+ * Null values are supported
+ * <p>
+ * This implementation currently does nothing with the topic names or header names.
+ * </p>
+ */
 public class FlatbufferSinkConverter implements Converter {
 
     private ModelConverter<?> flatbuffersConverter;

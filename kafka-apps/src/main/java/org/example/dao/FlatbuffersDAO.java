@@ -5,7 +5,12 @@ import org.apache.kafka.streams.processor.api.ProcessorContext;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.example.models.FBAudit;
 
-
+/**
+ * Generic DAO for wrappers
+ *
+ * @param <FB> - flatbuffers table
+ * @param <WRAPPER> - wrapper around FB
+ */
 public class FlatbuffersDAO<FB extends Table, WRAPPER extends AbstractFlatbufferWrapper<FB>> {
     private final KeyValueStore<Long, FB> store;
     private final WrapperFactory<FB, WRAPPER> wrapperFactory;
@@ -18,6 +23,12 @@ public class FlatbuffersDAO<FB extends Table, WRAPPER extends AbstractFlatbuffer
         this.wrapperFactory = new WrapperFactory<>(daoClass);
     }
 
+    /**
+     * Should be used if new object created without external id.
+     * Id must be generated from partition and streamTime
+     *
+     * @return
+     */
     public WRAPPER create() {
         int partition = context.recordMetadata().get().partition();
         //generate id via sequencer from partition and context.currentStreamTimeMs()
@@ -27,10 +38,22 @@ public class FlatbuffersDAO<FB extends Table, WRAPPER extends AbstractFlatbuffer
         return create(id);
     }
 
+    /**
+     * Create a new wrapper around empty flatbuffer
+     *
+     * @param id for object and key for store
+     * @return empty wrapper
+     */
     public WRAPPER create(long id) {
         return wrapperFactory.create(id);
     }
 
+    /**
+     * Loads flatbuffer from internal store and wraps it with a corresponding wrapper
+     *
+     * @param key of a record in internal storage, object public_id
+     * @return wrapper or null if object not found
+     */
     public WRAPPER get(long key) {
         FB storedObject = store.get(key);
         if (storedObject != null) {
@@ -39,6 +62,11 @@ public class FlatbuffersDAO<FB extends Table, WRAPPER extends AbstractFlatbuffer
         return null;
     }
 
+    /**
+     * Update flatbuffer state in internal storage
+     *
+     * @param object
+     */
     public void put(WRAPPER object) {
         long key = object.getId();
 
@@ -66,6 +94,11 @@ public class FlatbuffersDAO<FB extends Table, WRAPPER extends AbstractFlatbuffer
         store.put(key, object.toFlatbuffers()); //get mutated bytebuffer
     }
 
+    /**
+     * Deletes flatbuffers from internal storage
+     *
+     * @param id - object public_id
+     */
     public void delete(long id) {
         long key = id;
         WRAPPER prevObject = get(key);
