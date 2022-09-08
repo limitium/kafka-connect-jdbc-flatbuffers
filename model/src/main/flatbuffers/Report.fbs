@@ -1,0 +1,32 @@
+namespace org.example.models;
+
+enum FBReportEventStatus: byte {
+    NEW,
+    UPDATE,
+    DELETE
+}
+
+table FBReportEvent {
+    id: long;
+    who: string;
+    what: string;
+    when: long;
+    status: FBReportEventStatus;
+}
+
+table FBReport {
+    id: long;
+    who: string;
+    what: string;
+    when: long;
+    audit: FBAudit;
+}
+
+table FBAudit {
+    trace_id: long;
+    version: int32;
+    removed: bool;
+    created_at: long;
+    modified_at: long;
+    modified_by: string;
+}

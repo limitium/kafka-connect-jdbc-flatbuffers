@@ -1,0 +1,11 @@
+spring:
+  application.name: "report-processor"
+#  main.web-application-type: NONE
+#
+#server.port: 9001
+#management:
+#  server.port: 9001
+#  endpoints.web.exposure.include: "*"
+#
+#logging.pattern.level: trace_id=%mdc{trace_id} span_id=%mdc{span_id} %5p
+#
